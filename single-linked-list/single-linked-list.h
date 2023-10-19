@@ -125,6 +125,7 @@ public:
     }
 
     SingleLinkedList& operator=(const SingleLinkedList& rhs) {
+        assert(head_.next_node != rhs.head_.next_node);
         SingleLinkedListCopy(rhs);
         return *this;
     }
@@ -183,14 +184,9 @@ public:
 
     Iterator InsertAfter(ConstIterator pos, const Type& value) {
         Node* new_node;
-        try {
-            assert(pos.node_ != nullptr);
-            new_node = new Node(value, pos.node_->next_node);
-            pos.node_->next_node = new_node;
-        }
-        catch (...) {
-            throw;
-        }
+        assert(pos.node_ != nullptr);
+        new_node = new Node(value, pos.node_->next_node);
+        pos.node_->next_node = new_node;
         size_++;
         return Iterator(new_node);
     }
@@ -276,7 +272,7 @@ bool operator<(const SingleLinkedList<Type>& lhs, const SingleLinkedList<Type>& 
 
 template <typename Type>
 bool operator<=(const SingleLinkedList<Type>& lhs, const SingleLinkedList<Type>& rhs) {
-    return !(lhs > rhs);
+    return !(rhs < lhs);
 }
 
 template <typename Type>
